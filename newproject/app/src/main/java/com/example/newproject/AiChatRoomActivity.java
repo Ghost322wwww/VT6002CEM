@@ -1,5 +1,6 @@
 package com.example.newproject;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 public class AiChatRoomActivity extends AppCompatActivity {
     private CardView btnSendMsg;
     private EditText textMsg;
+    private ImageButton btn_back;
     private RecyclerView chatRecyclerView;
     private AiChatRoomAdapter chatAdapter;
     private ArrayList<String> messages;
@@ -24,19 +26,17 @@ public class AiChatRoomActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_aichat_room);
 
-        // 初始化 UI 元件
         btnSendMsg = findViewById(R.id.btn_sendMsg);
         textMsg = findViewById(R.id.text_msg);
         chatRecyclerView = findViewById(R.id.msgAdapter);
+        btn_back = findViewById(R.id.btn_back_home);
 
         messages = new ArrayList<>();
         chatAdapter = new AiChatRoomAdapter(this, messages);
 
-        // 設置 RecyclerView
         chatRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         chatRecyclerView.setAdapter(chatAdapter);
 
-        // 發送訊息按鈕事件
         btnSendMsg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -45,6 +45,15 @@ public class AiChatRoomActivity extends AppCompatActivity {
                     chatAdapter.sendMessage(userMessage);
                     textMsg.setText("");
                 }
+            }
+        });
+
+        btn_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AiChatRoomActivity.this, homePage.class);
+                startActivity(intent);
+                finish();
             }
         });
     }

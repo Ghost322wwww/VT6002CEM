@@ -9,11 +9,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.newproject.R;
-import com.example.newproject.GPTClient;
-import com.example.newproject.GPTRequest;
-import com.example.newproject.GPTResponse;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
