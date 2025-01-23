@@ -1,7 +1,9 @@
 package com.example.newproject;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
@@ -20,5 +22,16 @@ public class AiChatRoomActivity extends AppCompatActivity {
         btn_sendMsg = findViewById(R.id.btn_sendMsg);
         btn_back = findViewById(R.id.btn_back_home);
         text_msg = findViewById(R.id.text_msg);
+
+        btn_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ChatRoomActivity.this, ChatRoomHomePageActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+        
     }
+
 }
