@@ -16,5 +16,9 @@ public class AiChatRoomActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_aichat_room); // Ensure this layout file exists
+
+        btn_sendMsg = findViewById(R.id.btn_sendMsg);
+        btn_back = findViewById(R.id.btn_back_home);
+        text_msg = findViewById(R.id.text_msg);
     }
 }
