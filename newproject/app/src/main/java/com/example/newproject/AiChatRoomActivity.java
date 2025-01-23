@@ -26,12 +26,12 @@ public class AiChatRoomActivity extends AppCompatActivity {
         btn_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ChatRoomActivity.this, ChatRoomHomePageActivity.class);
+                Intent intent = new Intent(AiChatRoomActivity.this, ProfileActivity.class);
                 startActivity(intent);
                 finish();
             }
         });
-        
+
     }
 
 }
