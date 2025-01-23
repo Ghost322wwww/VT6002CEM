@@ -6,15 +6,14 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.example.newproject.Adapter.AiChatRoomAdapter;
 
 import java.util.ArrayList;
 
 public class AiChatRoomActivity extends AppCompatActivity {
-    private ImageButton btnSendMsg;
+    private CardView btnSendMsg;
     private EditText textMsg;
     private RecyclerView chatRecyclerView;
     private AiChatRoomAdapter chatAdapter;
