@@ -1,37 +1,52 @@
 package com.example.newproject;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.newproject.Adapter.AiChatRoomAdapter;
+
+import java.util.ArrayList;
 
 public class AiChatRoomActivity extends AppCompatActivity {
-    ImageButton btn_back;
-    EditText text_msg;
-    CardView btn_sendMsg;
+    private ImageButton btnSendMsg;
+    private EditText textMsg;
+    private RecyclerView chatRecyclerView;
+    private AiChatRoomAdapter chatAdapter;
+    private ArrayList<String> messages;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_aichat_room); // Ensure this layout file exists
+        setContentView(R.layout.activity_aichat_room);
 
-        btn_sendMsg = findViewById(R.id.btn_sendMsg);
-        btn_back = findViewById(R.id.btn_back_home);
-        text_msg = findViewById(R.id.text_msg);
+        // 初始化 UI 元件
+        btnSendMsg = findViewById(R.id.btn_sendMsg);
+        textMsg = findViewById(R.id.text_msg);
+        chatRecyclerView = findViewById(R.id.msgAdapter);
 
-        btn_back.setOnClickListener(new View.OnClickListener() {
+        messages = new ArrayList<>();
+        chatAdapter = new AiChatRoomAdapter(this, messages);
+
+        // 設置 RecyclerView
+        chatRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        chatRecyclerView.setAdapter(chatAdapter);
+
+        // 發送訊息按鈕事件
+        btnSendMsg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(AiChatRoomActivity.this, ProfileActivity.class);
-                startActivity(intent);
-                finish();
+                String userMessage = textMsg.getText().toString().trim();
+                if (!userMessage.isEmpty()) {
+                    chatAdapter.sendMessage(userMessage);
+                    textMsg.setText("");
+                }
             }
         });
-
     }
-
 }
