@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_gravity="center_horizontal">
+
+    <LinearLayout
+        android:id="@+id/tag_result_item_display"
+        android:layout_width="match_parent"
+        android:layout_height="130dp"
+        android:orientation="horizontal"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="6dp"
+        android:background="@drawable/tag_list_item_bg"
+        android:padding="7dp"
+        tools:ignore="MissingConstraints">
+
+        <ImageView
+            android:id="@+id/tag_result_item_img"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            android:layout_gravity="center"
+            android:background="@drawable/upcomingiti_bg"
+            android:src="@drawable/bg_taiwan"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="6dp"
+            android:layout_marginTop="9dp"
+            android:layout_marginBottom="9dp"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tag_result_item_attr_name"
+                    android:layout_width="139dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:fontFamily="@font/roboto_bold"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="1dp"
+                    android:textSize="18sp"
+                    android:text="Wong Tai Sin"/>
+
+                <TextView
+                    android:id="@+id/tag_result_item_district"
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="82dp"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_medium"
+                    android:textSize="13.2sp"
+                    android:gravity="end"
+                    android:text="Wan Chai "/>
+
+                <ImageButton
+                    android:id="@+id/bookmarkButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_gravity="center"
+                    app:tint="@color/darkOrange_0"
+                    android:backgroundTint="#00ffffff"
+                    app:srcCompat="@drawable/baseline_bookmark_border_24" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tag_result_item_details"
+                android:layout_width="match_parent"
+                android:layout_height="65dp"
+                android:layout_marginEnd="1dp"
+                android:layout_weight="1"
+                android:paddingTop="1.3dp"
+                android:text="tag tag tag tag tag tag tag tag tag tag\ntag tag tag or description"
+                android:textSize="15sp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginStart="185dp"
+                android:layout_gravity="end">
+            <ImageButton
+                android:id="@+id/shareButton"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:padding="6dp"
+                app:tint="@color/darkOrange_0"
+                android:background="#00ffffff"
+                android:src="@drawable/share_btn_icon"/>
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

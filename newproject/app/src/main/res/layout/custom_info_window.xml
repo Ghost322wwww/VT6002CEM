@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="20dp"
+    android:layout_gravity="center_horizontal"
+    android:backgroundTint="#f9f9f9"
+    android:background="@drawable/searchbar_rounded_corner"
+    android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="13dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:padding="5dp"
+                    android:fontFamily="@font/roboto_bold"
+                    android:text="Place Address"
+                    android:textAlignment="viewStart"
+                    android:textColor="@color/darkGreen_4"
+                    android:textSize="22dp" />
+
+
+                <ImageButton
+                    android:id="@+id/shareButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:padding="10dp"
+                    android:backgroundTint="@color/white"
+                    android:tint="@color/darkGreen_4"
+                    android:onClick="onButtonClick"
+                    android:src="@drawable/share_btn_icon" />
+
+                <ImageButton
+                    android:id="@+id/bookmarkButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="8dp"
+                    android:padding="5dp"
+                    android:tint="@color/darkGreen_4"
+                    android:background="@color/white"
+                    android:onClick="onButtonClick"
+                    android:src="@drawable/baseline_bookmark_border_24" />
+
+                <ImageButton
+                    android:id="@+id/cancelButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="13dp"
+                    android:padding="5dp"
+                    android:tint="@color/darkGreen_4"
+                    android:background="@color/white"
+                    android:src="@drawable/ic_baseline_clear_24" />
+
+
+        </LinearLayout>
+
+
+        <ImageView
+            android:id="@+id/placephoto"
+            android:layout_width="wrap_content"
+            android:layout_height="200dp"
+            android:layout_margin="5dp"
+            android:src="@drawable/bg_japan" />
+
+        <TextView
+            android:id="@+id/snippet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="10"
+            android:padding="5dp"
+            android:fontFamily="@font/roboto_medium"
+            android:text="Place Address"
+            android:textColor="#000"
+            android:textSize="15sp" />
+
+
+</LinearLayout>

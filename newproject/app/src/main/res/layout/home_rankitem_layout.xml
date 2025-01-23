@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_width="170dp"
+        android:layout_height="170dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="0dp"
+        android:background="@drawable/upcomingiti_bg">
+
+        <ImageView
+            android:id="@+id/rankimg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/upcomingiti_bg"
+            android:translationX="1dp"
+            android:src="@drawable/bg">
+        </ImageView>
+
+        <TextView
+            android:id="@+id/rankdistrict"
+            android:layout_marginStart="5dp"
+            android:layout_marginBottom="2dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/linear_layout"
+            android:gravity="center_vertical"
+            android:textColor="#ffffff"
+            android:translationX="2dp"
+            android:text="Wong Tai Sin"/>
+
+        <LinearLayout
+            android:id="@+id/linear_layout"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_alignParentBottom="true"
+            android:padding="5dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="6dp"
+            android:background="@drawable/rankingarea_bg"
+            android:gravity="start"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/ranklandmarkicon"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="start"
+                android:layout_weight="10"
+                android:translationX="2dp"
+                android:src="@drawable/rankinglandmarkimage_icon"/>
+
+            <TextView
+                android:id="@+id/rankarea"
+                android:layout_marginStart="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:translationX="2dp"
+                android:gravity="center_vertical"
+                android:layout_weight="1"
+                android:text="Kowloon"/>
+        </LinearLayout>
+    </RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
