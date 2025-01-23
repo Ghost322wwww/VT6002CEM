@@ -57,7 +57,7 @@ public class AiChatRoomAdapter extends RecyclerView.Adapter<AiChatRoomAdapter.Ch
 
     // 發送用戶訊息並請求 AI 回應
     public void sendMessage(String userMessage) {
-        messages.add("你: " + userMessage);
+        messages.add("You: " + userMessage);
         notifyDataSetChanged();
 
         GPTRequest request = new GPTRequest(userMessage);
