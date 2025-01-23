@@ -46,24 +46,37 @@
             android:paddingEnd="20dp" />
     </LinearLayout>
 
-    <!-- Chat Messages RecyclerView -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/msgAdapter"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="7dp"
-        android:layout_marginEnd="7dp"
-        android:paddingBottom="2dp"
-        android:paddingTop="2dp"
-        android:background="#ffffff"
-        android:orientation="vertical"
-        tools:listitem="@layout/sender_layout"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/chatroom_headbar"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout2" />
 
-    <!-- Message Input Section -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottom_layout"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="16dp" />
+
+    <TextView
+        android:id="@+id/welcome_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Hi"
+        android:textSize="28dp"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bottom_layout" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/bottom_layout"
+        tools:ignore="MissingConstraints">
+
+    </RelativeLayout>
+
     <LinearLayout
         android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
@@ -109,7 +122,7 @@
 
             <!-- Text Input Field -->
             <EditText
-                android:id="@+id/text_msg"
+                android:id="@+id/message_edit_text"
                 android:layout_width="0dp"
                 android:layout_height="48dp"
                 android:layout_weight="1"
@@ -125,25 +138,13 @@
                 android:fontFamily="@font/poppins_regular" />
 
             <!-- Send Message Button -->
-            <androidx.cardview.widget.CardView
-                android:id="@+id/btn_sendMsg"
+            <ImageButton
+                android:id="@+id/send_btn"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:contentDescription="Send Message"
-                app:cardCornerRadius="10dp">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    app:srcCompat="@android:drawable/ic_menu_send"
-                    app:tint="@color/darkGreen_4" />
-            </androidx.cardview.widget.CardView>
-
+                android:padding="8dp"
+                app:srcCompat="@drawable/baseline_send_24"
+                android:background="?attr/selectableItemBackgroundBorderless" />
         </LinearLayout>
-
     </LinearLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>
