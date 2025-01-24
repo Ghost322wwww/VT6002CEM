@@ -67,6 +67,24 @@ public class mapPageActivity extends AppCompatActivity implements OnMapReadyCall
             Log.e(TAG, "Gyroscope sensor not available!");
         }
 
+        gyroscopeEventListener = new SensorEventListener() {
+            @Override
+            public void onSensorChanged(SensorEvent event) {
+                if (event.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
+                    float x = event.values[0]; 
+                    float y = event.values[1];
+                    float z = event.values[2];
+
+                    Log.d(TAG, "Gyroscope changed: X=" + x + ", Y=" + y + ", Z=" + z);
+                }
+            }
+
+            @Override
+            public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+            }
+        };
+
         // **確保所有按鈕存在**
         if (btnHomePage == null || btnChat == null || btnProfile == null || btnPlanning == null || btnMap == null || mGps == null) {
             Log.e(TAG, "Error: One or more buttons are NULL!");
