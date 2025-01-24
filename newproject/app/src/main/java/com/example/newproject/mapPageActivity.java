@@ -21,6 +21,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.libraries.places.api.Places;
@@ -71,11 +72,17 @@ public class mapPageActivity extends AppCompatActivity implements OnMapReadyCall
             @Override
             public void onSensorChanged(SensorEvent event) {
                 if (event.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
-                    float x = event.values[0]; 
-                    float y = event.values[1];
-                    float z = event.values[2];
-
-                    Log.d(TAG, "Gyroscope changed: X=" + x + ", Y=" + y + ", Z=" + z);
+                    float rotation = event.values[2]; 
+                    if (gMap != null) {
+                        float currentBearing = gMap.getCameraPosition().bearing;
+                        gMap.animateCamera(CameraUpdateFactory.newCameraPosition(
+                                new CameraPosition.Builder()
+                                        .target(gMap.getCameraPosition().target)
+                                        .zoom(gMap.getCameraPosition().zoom)
+                                        .bearing(currentBearing + rotation * 2)
+                                        .build()
+                        ));
+                    }
                 }
             }
 
@@ -149,6 +156,21 @@ public class mapPageActivity extends AppCompatActivity implements OnMapReadyCall
         // **檢查定位權限並初始化地圖**
         getLocationPermission();
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (gyroscopeSensor != null) {
+            sensorManager.registerListener(gyroscopeEventListener, gyroscopeSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        sensorManager.unregisterListener(gyroscopeEventListener);
+    }
+
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
