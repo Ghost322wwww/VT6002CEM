@@ -77,6 +77,17 @@ public class LoginActivity extends AppCompatActivity {
         loginButton = findViewById(R.id.login_button);
         auth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
+        fingerprintButton = findViewById(R.id.fingerprint_button);
+        executor = Executors.newSingleThreadExecutor();
+
+        biometricPrompt = new BiometricPrompt.Builder(this)
+                .setTitle("Fingerprint Authentication")
+                .setSubtitle("Use fingerprint to log in")
+                .setNegativeButton("Cancel", executor, (dialogInterface, i) -> {
+                    Toast.makeText(getApplicationContext(), "Authentication canceled", Toast.LENGTH_SHORT).show();
+                }).build();
+
+        fingerprintButton.setOnClickListener(v -> authenticateUser());
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
