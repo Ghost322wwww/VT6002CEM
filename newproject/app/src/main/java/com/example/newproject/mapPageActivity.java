@@ -25,6 +25,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.net.PlacesClient;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+
 
 public class mapPageActivity extends AppCompatActivity implements OnMapReadyCallback, OnConnectionFailedListener {
 
@@ -38,6 +43,10 @@ public class mapPageActivity extends AppCompatActivity implements OnMapReadyCall
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 123;
     private boolean mLocationPermissionGranted = false;
+
+    private SensorManager sensorManager;
+    private Sensor gyroscopeSensor;
+    private SensorEventListener gyroscopeEventListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
