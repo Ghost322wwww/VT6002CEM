@@ -33,6 +33,7 @@ public class AiChatRoomActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     TextView welcomeTextView;
     EditText messageEditText;
+    ImageButton btn_back;
     ImageButton sendButton;
     List<Message> messageList;
     MessageAdapter messageAdapter;
@@ -51,6 +52,7 @@ public class AiChatRoomActivity extends AppCompatActivity {
         welcomeTextView = findViewById(R.id.welcome_text);
         messageEditText = findViewById(R.id.message_edit_text);
         sendButton = findViewById(R.id.send_btn);
+        btn_back = findViewById(R.id.btn_back_home);
 
         messageAdapter = new MessageAdapter(messageList);
         recyclerView.setAdapter(messageAdapter);
@@ -64,6 +66,14 @@ public class AiChatRoomActivity extends AppCompatActivity {
             messageEditText.setText("");
             callAPI(question);
             welcomeTextView.setVisibility(View.GONE);
+        });
+        btn_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AiChatRoomActivity.this, homePage.class);
+                startActivity(intent);
+                finish();
+            }
         });
     }
 
