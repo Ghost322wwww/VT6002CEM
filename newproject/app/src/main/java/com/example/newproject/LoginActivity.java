@@ -77,17 +77,8 @@ public class LoginActivity extends AppCompatActivity {
         loginButton = findViewById(R.id.login_button);
         auth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
-        fingerprintButton = findViewById(R.id.fingerprint_button);
         executor = Executors.newSingleThreadExecutor();
 
-        biometricPrompt = new BiometricPrompt.Builder(this)
-                .setTitle("Fingerprint Authentication")
-                .setSubtitle("Use fingerprint to log in")
-                .setNegativeButton("Cancel", executor, (dialogInterface, i) -> {
-                    Toast.makeText(getApplicationContext(), "Authentication canceled", Toast.LENGTH_SHORT).show();
-                }).build();
-
-        fingerprintButton.setOnClickListener(v -> authenticateUser());
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -125,9 +116,14 @@ public class LoginActivity extends AppCompatActivity {
                 String email = String.valueOf(loginEmail.getText());
                 String password = String.valueOf(loginPassword.getText());
 
-                if (TextUtils.isEmpty(email) | TextUtils.isEmpty(password)) {
-                    Toast.makeText(LoginActivity.this, "All information must be enter!!", Toast.LENGTH_SHORT).show();
+                if (TextUtils.isEmpty(email)) {
+                    loginEmail.setError("Email can not be null");
+                    return;
+                }
 
+                if (TextUtils.isEmpty(password)) {
+                    loginPassword.setError("Password can not be null");
+                    return;
                 }
 
                 auth.signInWithEmailAndPassword(email, password)
@@ -165,38 +161,6 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(LoginActivity.this, SignupActivity.class);
                 startActivity(intent);
-            }
-        });
-    }
-
-    private void authenticateUser() {
-        cancellationSignal = new CancellationSignal();
-        cancellationSignal.setOnCancelListener(() ->
-                Toast.makeText(getApplicationContext(), "Authentication canceled", Toast.LENGTH_SHORT).show()
-        );
-
-        biometricPrompt.authenticate(cancellationSignal, executor, new BiometricPrompt.AuthenticationCallback() {
-            @Override
-            public void onAuthenticationSucceeded(BiometricPrompt.AuthenticationResult result) {
-                super.onAuthenticationSucceeded(result);
-                runOnUiThread(() -> {
-                    Toast.makeText(LoginActivity.this, "Fingerprint recognized. Logging in...", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
-                    startActivity(intent);
-                    finish();
-                });
-            }
-
-            @Override
-            public void onAuthenticationFailed() {
-                super.onAuthenticationFailed();
-                runOnUiThread(() -> Toast.makeText(getApplicationContext(), "Authentication failed", Toast.LENGTH_SHORT).show());
-            }
-
-            @Override
-            public void onAuthenticationError(int errorCode, CharSequence errString) {
-                super.onAuthenticationError(errorCode, errString);
-                runOnUiThread(() -> Toast.makeText(getApplicationContext(), "Authentication error: " + errString, Toast.LENGTH_SHORT).show());
             }
         });
     }

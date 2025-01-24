@@ -66,15 +66,6 @@
                 android:textSize="18sp"
                 app:cornerRadius="20dp" />
 
-            <ImageButton
-                android:id="@+id/fingerprint_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="20dp"
-                android:contentDescription="Fingerprint authentication"
-                android:src="@drawable/baseline_fingerprint_24" />
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
