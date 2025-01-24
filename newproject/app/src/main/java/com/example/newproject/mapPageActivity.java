@@ -78,7 +78,7 @@ public class mapPageActivity extends AppCompatActivity implements OnMapReadyCall
                                 new CameraPosition.Builder()
                                         .target(gMap.getCameraPosition().target)
                                         .zoom(gMap.getCameraPosition().zoom)
-                                        .bearing(currentBearing + rotation * 2)
+                                        .bearing(currentBearing + rotation * 10)
                                         .build()
                         ));
                     }
