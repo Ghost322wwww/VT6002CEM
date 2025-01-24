@@ -61,7 +61,7 @@
             android:paddingEnd="12dp"
             android:paddingTop="7dp"
             android:paddingBottom="7dp"
-            android:text="Itinerary"
+            android:text="Itinerary Note"
             android:gravity="center_vertical"
             android:textSize="25sp"
             android:background="#ffffff"
