@@ -41,7 +41,7 @@ import java.util.HashMap;
 public class LoginActivity extends AppCompatActivity {
 
     EditText loginEmail, loginPassword;
-    Button loginButton, login_google_button,btn_back;
+    Button loginButton;
     TextView signupRedirectText, backText;
     FirebaseAuth auth;
     FirebaseDatabase database;
@@ -151,6 +151,7 @@ public class LoginActivity extends AppCompatActivity {
 
         });
 
+
         backText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -164,6 +165,38 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(LoginActivity.this, SignupActivity.class);
                 startActivity(intent);
+            }
+        });
+    }
+
+    private void authenticateUser() {
+        cancellationSignal = new CancellationSignal();
+        cancellationSignal.setOnCancelListener(() ->
+                Toast.makeText(getApplicationContext(), "Authentication canceled", Toast.LENGTH_SHORT).show()
+        );
+
+        biometricPrompt.authenticate(cancellationSignal, executor, new BiometricPrompt.AuthenticationCallback() {
+            @Override
+            public void onAuthenticationSucceeded(BiometricPrompt.AuthenticationResult result) {
+                super.onAuthenticationSucceeded(result);
+                runOnUiThread(() -> {
+                    Toast.makeText(LoginActivity.this, "Fingerprint recognized. Logging in...", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
+                    startActivity(intent);
+                    finish();
+                });
+            }
+
+            @Override
+            public void onAuthenticationFailed() {
+                super.onAuthenticationFailed();
+                runOnUiThread(() -> Toast.makeText(getApplicationContext(), "Authentication failed", Toast.LENGTH_SHORT).show());
+            }
+
+            @Override
+            public void onAuthenticationError(int errorCode, CharSequence errString) {
+                super.onAuthenticationError(errorCode, errString);
+                runOnUiThread(() -> Toast.makeText(getApplicationContext(), "Authentication error: " + errString, Toast.LENGTH_SHORT).show());
             }
         });
     }
