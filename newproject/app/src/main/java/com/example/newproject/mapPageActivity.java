@@ -60,6 +60,12 @@ public class mapPageActivity extends AppCompatActivity implements OnMapReadyCall
         btnPlanning = findViewById(R.id.btn_planning);
         btnMap = findViewById(R.id.btn_map);
         mGps = findViewById(R.id.ic_gps);
+        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        gyroscopeSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+
+        if (gyroscopeSensor == null) {
+            Log.e(TAG, "Gyroscope sensor not available!");
+        }
 
         // **確保所有按鈕存在**
         if (btnHomePage == null || btnChat == null || btnProfile == null || btnPlanning == null || btnMap == null || mGps == null) {
