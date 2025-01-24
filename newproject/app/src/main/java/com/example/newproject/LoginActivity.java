@@ -30,6 +30,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.FirebaseDatabase;
+import android.hardware.biometrics.BiometricPrompt;
+import android.os.CancellationSignal;
+import android.widget.ImageButton;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import java.util.HashMap;
 
@@ -41,6 +46,12 @@ public class LoginActivity extends AppCompatActivity {
     FirebaseAuth auth;
     FirebaseDatabase database;
     GoogleSignInClient mGoogleSignInClient;
+
+    ImageButton fingerprintButton;
+    BiometricPrompt biometricPrompt;
+    CancellationSignal cancellationSignal;
+    Executor executor;
+
     int RC_SIGN_IN = 20;
 
     @Override
