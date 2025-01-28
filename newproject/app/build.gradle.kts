@@ -52,7 +52,6 @@ dependencies {
     implementation("com.google.firebase:firebase-firestore:25.1.1")
     implementation ("com.squareup.retrofit2:retrofit:2.9.0")
     implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
-    implementation ("com.squareup.okhttp3:okhttp:4.9.0")
     implementation ("com.google.firebase:firebase-auth:21.0.1")
     implementation ("com.google.firebase:firebase-database:20.0.3")
     implementation ("com.squareup.picasso:picasso:2.71828")
@@ -66,6 +65,8 @@ dependencies {
     implementation("com.google.android.libraries.places:places:3.3.0")
     implementation("androidx.recyclerview:recyclerview:1.2.1")
     implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation ("com.squareup.okhttp3:okhttp:4.9.3")
+    implementation ("com.google.code.gson:gson:2.8.9")
 
 
     implementation("com.google.firebase:firebase-auth")
