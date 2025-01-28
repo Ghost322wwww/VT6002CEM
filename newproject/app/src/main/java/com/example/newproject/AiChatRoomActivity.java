@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -33,41 +32,39 @@ public class AiChatRoomActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     TextView welcomeTextView;
     EditText messageEditText;
-    ImageButton btn_back;
-    ImageButton sendButton;
+    ImageButton btnBack, sendButton;
     List<Message> messageList;
     MessageAdapter messageAdapter;
-    public static final MediaType JSON
-            = MediaType.get("application/json");
-
+    public static final MediaType JSON = MediaType.get("application/json");
     OkHttpClient client = new OkHttpClient();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_aichat_room);
-        messageList = new ArrayList<>();
 
+        messageList = new ArrayList<>();
         recyclerView = findViewById(R.id.recycler_view);
         welcomeTextView = findViewById(R.id.welcome_text);
         messageEditText = findViewById(R.id.message_edit_text);
         sendButton = findViewById(R.id.send_btn);
-        btn_back = findViewById(R.id.btn_back_home);
+        btnBack = findViewById(R.id.btn_back_home);
 
         messageAdapter = new MessageAdapter(messageList);
         recyclerView.setAdapter(messageAdapter);
-        LinearLayoutManager llm = new LinearLayoutManager(this);
-        llm.setStackFromEnd(true);
-        recyclerView.setLayoutManager(llm);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        sendButton.setOnClickListener((v)->{
+        sendButton.setOnClickListener(v -> {
             String question = messageEditText.getText().toString().trim();
-            addToChat(question,Message.SENT_BY_ME);
-            messageEditText.setText("");
-            callAPI(question);
-            welcomeTextView.setVisibility(View.GONE);
+            if (!question.isEmpty()) {
+                addToChat("You: " + question, Message.SENT_BY_ME);
+                messageEditText.setText("");
+                callAPI(question);
+                welcomeTextView.setVisibility(View.GONE);
+            }
         });
-        btn_back.setOnClickListener(new View.OnClickListener() {
+
+        btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(AiChatRoomActivity.this, homePage.class);
@@ -77,35 +74,37 @@ public class AiChatRoomActivity extends AppCompatActivity {
         });
     }
 
-    void addToChat(String message, String sentBy){
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                messageList.add(new Message(message, sentBy));
-                messageAdapter.notifyDataSetChanged();
-                recyclerView.smoothScrollToPosition(messageAdapter.getItemCount());
-            }
+    // ✅ 追加消息到聊天记录
+    void addToChat(String message, String sentBy) {
+        runOnUiThread(() -> {
+            messageList.add(new Message(message, sentBy));
+            messageAdapter.notifyDataSetChanged();
+            recyclerView.smoothScrollToPosition(messageAdapter.getItemCount());
         });
     }
 
-    void addResponse(String response){
-        addToChat(response,Message.SENT_BY_BOT);
+    // ✅ 添加 AI 回复
+    void addResponse(String response) {
+        addToChat("AI: " + response, Message.SENT_BY_BOT);
     }
 
-    void callAPI(String question){
+    // ✅ 调用 DeepSeek API
+    void callAPI(String question) {
         JSONObject jsonBody = new JSONObject();
         try {
-            jsonBody.put("model", "tts-1");
-            jsonBody.put("prompt", question);
-            jsonBody.put("max_tokens", 5);
-            jsonBody.put("temperature", 0.7);
+            jsonBody.put("model", "deepseek-chat");
+            jsonBody.put("messages", new JSONArray()
+                    .put(new JSONObject().put("role", "system").put("content", "You are a helpful assistant."))
+                    .put(new JSONObject().put("role", "user").put("content", question)));
+            jsonBody.put("stream", false);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        RequestBody body = RequestBody.create(jsonBody.toString(),JSON);
+
+        RequestBody body = RequestBody.create(jsonBody.toString(), JSON);
         Request request = new Request.Builder()
-                .url("https://api.openai.com/v1/chat/completions")
-                .header("Authorization", "123")
+                .url("https://api.deepseek.com/chat/completions")
+                .header("Authorization", "Bearer sk-859e9bd8e2fd4e3ab18db391c2ca0065")
                 .post(body)
                 .build();
 
@@ -117,21 +116,20 @@ public class AiChatRoomActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                if(response.isSuccessful()){
-                    JSONObject jsonObject = null;
+                if (response.isSuccessful()) {
                     try {
-                        jsonObject = new JSONObject(response.body().string());
+                        JSONObject jsonObject = new JSONObject(response.body().string());
                         JSONArray jsonArray = jsonObject.getJSONArray("choices");
-                        String result = jsonArray.getJSONObject(0).getString("text");
-                        addResponse(result.trim());
+                        JSONObject messageObj = jsonArray.getJSONObject(0).getJSONObject("message");
+                        String result = messageObj.getString("content").trim();
+                        addResponse(result);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                }else{
-                    addResponse("Failed to load response due to " + response.body().string());
+                } else {
+                    addResponse("Error: " + response.body().string());
                 }
             }
         });
     }
 }
-
