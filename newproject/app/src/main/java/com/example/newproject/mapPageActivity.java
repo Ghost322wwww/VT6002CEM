@@ -71,7 +71,9 @@ public class mapPageActivity extends AppCompatActivity implements OnMapReadyCall
             @Override
             public void onSensorChanged(SensorEvent event) {
                 if (event.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
-                    float rotation = event.values[2]; 
+                    Log.d(TAG, "Gyroscope Detected: " + event.values[2]);
+
+                    float rotation = event.values[2];
                     if (gMap != null) {
                         float currentBearing = gMap.getCameraPosition().bearing;
                         gMap.animateCamera(CameraUpdateFactory.newCameraPosition(
@@ -87,9 +89,9 @@ public class mapPageActivity extends AppCompatActivity implements OnMapReadyCall
 
             @Override
             public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
             }
         };
+
 
         // **確保所有按鈕存在**
         if (btnHomePage == null || btnChat == null || btnProfile == null || btnPlanning == null || btnMap == null || mGps == null) {
@@ -141,8 +143,10 @@ public class mapPageActivity extends AppCompatActivity implements OnMapReadyCall
             mGps.setOnClickListener(view -> {
                 Log.d(TAG, "GPS button clicked");
                 getDeviceLocation();
+                restartGyroscope();
             });
         }
+
 
         // **初始化 Places API**
         String apiKey = getString(R.string.API_KEY);
@@ -159,10 +163,33 @@ public class mapPageActivity extends AppCompatActivity implements OnMapReadyCall
     @Override
     protected void onResume() {
         super.onResume();
+
         if (gyroscopeSensor != null) {
             sensorManager.registerListener(gyroscopeEventListener, gyroscopeSensor, SensorManager.SENSOR_DELAY_NORMAL);
+            Log.d(TAG, "Gyroscope registered in onResume.");
+        }
+
+        if (mLocationPermissionGranted) {
+            restartGyroscope();
         }
     }
+
+
+    private void restartGyroscope() {
+        if (gyroscopeSensor != null) {
+            sensorManager.unregisterListener(gyroscopeEventListener);
+
+            gyroscopeSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+
+            if (gyroscopeSensor != null) {
+                sensorManager.registerListener(gyroscopeEventListener, gyroscopeSensor, SensorManager.SENSOR_DELAY_NORMAL);
+                Log.d(TAG, "Gyroscope re-registered successfully after GPS activation.");
+            } else {
+                Log.e(TAG, "Gyroscope sensor is still unavailable.");
+            }
+        }
+    }
+
 
     @Override
     protected void onPause() {
@@ -184,11 +211,15 @@ public class mapPageActivity extends AppCompatActivity implements OnMapReadyCall
                     android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 return;
             }
+
             gMap.setMyLocationEnabled(true);
             gMap.getUiSettings().setMyLocationButtonEnabled(false);
             gMap.getUiSettings().setZoomControlsEnabled(true);
+
+            restartGyroscope();
         }
     }
+
 
     private void getDeviceLocation() {
         Log.d(TAG, "getDeviceLocation: Getting the device's current location");
