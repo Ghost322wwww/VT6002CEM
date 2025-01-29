@@ -117,6 +117,26 @@
             app:layout_constraintBottom_toBottomOf="parent" >
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/cameraButton"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="10dp"
+                android:layout_weight="8"
+                android:outlineSpotShadowColor="#00ffffff"
+                android:backgroundTint="#8dffffff"
+                app:cardCornerRadius="10dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    app:tint="@color/darkGreen_4"
+                    android:background="#00ffffff"
+                    app:srcCompat="@drawable/baseline_camera_alt_24" />
+            </androidx.cardview.widget.CardView>
+
+
+            <androidx.cardview.widget.CardView
                 android:id="@+id/uploadImageButton"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

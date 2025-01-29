@@ -2,8 +2,11 @@ package com.example.newproject;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
@@ -15,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -33,6 +37,9 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -40,6 +47,9 @@ public class ChatRoomActivity extends AppCompatActivity {
 
     String reciverUid, chatRoomName, senderUid;
     ImageButton btn_back;
+
+    private static final int CAMERA_REQUEST_CODE = 100;
+    private Uri cameraImageUri;
     CardView btn_sendMsg;
     EditText text_msg;
     FirebaseAuth mAuth;
@@ -157,7 +167,59 @@ public class ChatRoomActivity extends AppCompatActivity {
                 openFileChooser();
             }
         });
+
+        CardView cameraButton = findViewById(R.id.cameraButton);
+        cameraButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openCamera();
+            }
+        });
+
     }
+
+    void openCamera() {
+        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (cameraIntent.resolveActivity(getPackageManager()) != null) {
+            File photoFile = createImageFile();
+            if (photoFile != null) {
+                cameraImageUri = FileProvider.getUriForFile(
+                        this,
+                        "com.example.newproject.fileprovider",
+                        photoFile
+                );
+                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, cameraImageUri);
+                startActivityForResult(cameraIntent, CAMERA_REQUEST_CODE);
+            } else {
+                Toast.makeText(this, "Failed to create image file", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Toast.makeText(this, "No Camera App Available", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+    private File createImageFile() {
+        String fileName = "IMG_" + System.currentTimeMillis();
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        if (storageDir != null && !storageDir.exists()) {
+            storageDir.mkdirs();
+        }
+        File imageFile = null;
+        try {
+            imageFile = File.createTempFile(
+                    fileName,
+                    ".jpg",
+                    storageDir
+            );
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return imageFile;
+    }
+
+
+
 
     void openFileChooser() {
         Intent intent = new Intent();
@@ -166,46 +228,73 @@ public class ChatRoomActivity extends AppCompatActivity {
         startActivityForResult(intent, PICK_IMAGE_REQUEST);
     }
 
+
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
             Uri selectedImageUri = data.getData();
             sendImageMessage(selectedImageUri);
         }
+
+        if (requestCode == CAMERA_REQUEST_CODE && resultCode == RESULT_OK) {
+            if (cameraImageUri != null) {
+                sendImageMessage(cameraImageUri);
+            } else {
+                Toast.makeText(this, "Camera image capture failed", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
+
     void sendImageMessage(Uri imageUri) {
-        final Date date = new Date();
-        final StorageReference fileReference = mStorageRef.child(System.currentTimeMillis() + ".jpg");
-        fileReference.putFile(imageUri)
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        fileReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                            @Override
-                            public void onSuccess(Uri uri) {
-                                String imageUrl = uri.toString();
-                                // Here, don't include the 'msg' when creating the msgModel for an image message
-                                msgModel imageMessage = new msgModel("", senderUid, imageUrl, date.getTime());
-                                // send the image message
-                                sendMessage(imageMessage);
-                            }
-                        });
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(ChatRoomActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
+        if (imageUri == null) {
+            Toast.makeText(this, "Image URI is null", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        try {
+            // 1. 读取图片并压缩
+            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);
+            byte[] compressedData = baos.toByteArray();
+
+            final Date date = new Date();
+            final StorageReference fileReference = mStorageRef.child(System.currentTimeMillis() + ".jpg");
+            
+            UploadTask uploadTask = fileReference.putBytes(compressedData);
+            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    fileReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            String imageUrl = uri.toString();
+                            msgModel imageMessage = new msgModel("", senderUid, imageUrl, date.getTime());
+                            sendMessage(imageMessage);
+                        }
+                    });
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(ChatRoomActivity.this, "Upload failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Image compression failed", Toast.LENGTH_SHORT).show();
+        }
     }
+
+
     void sendMessage(msgModel message) {
         db.getReference().child("chats").child(chatRoomId).child("messages").push()
                 .setValue(message).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-
                     }
                 });
     }
