@@ -101,7 +101,7 @@ public class AiChatRoomActivity extends AppCompatActivity {
         RequestBody body = RequestBody.create(jsonBody.toString(), JSON);
         Request request = new Request.Builder()
                 .url("https://api.deepseek.com/chat/completions")
-                .header("Authorization", "Bearer 1")
+                .header("Authorization", "Bearer sk-859e9bd8e2fd4e3ab18db391c2ca0065")
                 .post(body)
                 .build();
 
